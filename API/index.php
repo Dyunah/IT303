@@ -1,19 +1,24 @@
 <?php
+header('Content-Type: application/json');
+$response = array("method" => $_SERVER['REQUEST_METHOD']);
 
+// Retrieve raw JSON data from request body
+$data = file_get_contents('php://input');
 
-echo "Response request method: " . $_SERVER["REQUEST_METHOD"] . "<br>";
+// // Decode JSON data
+$decodedData = json_decode($data, true);
 
+// // Access individual fields
+$name = $decodedData['name'] ?? '';
+$age = $decodedData['age'];
+$course = $decodedData['course'];
+$year = $decodedData['year'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
-    $data = json_decode(file_get_contents('php://input'), true);
-    
-    
-    if (json_last_error() === JSON_ERROR_NONE) {
-        echo "Response data: " . json_encode($data);
-    } else {
-        echo "Failed to decode JSON. Error: " . json_last_error_msg();
-    }
-}
+// // Add the fields to the response array
+$response['data']['name'] = $name;
+$response['data']['age'] = $age;
+$response['data']['course'] = $course;
+$response['data']['year'] = $year;
 
+echo json_encode($response);
 ?>
